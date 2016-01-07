@@ -1,1 +1,273 @@
-function loadtoc(t){function e(){if("entry"in t.feed){var e=t.feed.entry.length;if(totalEntires+=e,totalPosts=t.feed.openSearch$totalResults.$t,totalPosts>totalEntires){var s=document.createElement("script");s.type="text/javascript",startindex=totalEntires+1,s.setAttribute("src","/feeds/posts/summary?start-index="+startindex+"&max-results=500&alt=json-in-script&callback=loadtoc"),tocdiv.appendChild(s)}for(var o=0;e>o;o++){for(var l,a=t.feed.entry[o],r=a.title.$t,i=a.published.$t.substring(0,10),n=0;n<a.link.length;n++)if("alternate"==a.link[n].rel){l=a.link[n].href;break}if("content"in a)var c=a.content.$t;else if("summary"in a)var c=a.summary.$t;else var c="";var p=/<\S[^>]*>/g;if(c=c.replace(p,""),c.length>numChars){c=c.substring(0,numChars);var d=c.lastIndexOf(" ");c=c.substring(0,d)+"..."}var f="";if("category"in a){for(var n=0;n<a.category.length;n++)f+="<a href=\"javascript:filterPosts('"+a.category[n].term+"');\" title=\"Click here to select all posts with label '"+a.category[n].term+"'\">"+a.category[n].term+"</a>,  ";var y=f.lastIndexOf(",");-1!=y&&(f=f.substring(0,y))}postTitle.push(r),postDate.push(i),postUrl.push(l),postSum.push(c),postLabels.push(f)}}totalEntires==totalPosts&&(tocLoaded=!0,showToc())}e(),sortPosts(sortBy),tocLoaded=!0}function filterPosts(t){postFilter=t,displayToc(postFilter)}function allPosts(){postFilter="",displayToc(postFilter)}function sortPosts(t){function e(t,e){var s=postTitle[t];postTitle[t]=postTitle[e],postTitle[e]=s;var s=postDate[t];postDate[t]=postDate[e],postDate[e]=s;var s=postUrl[t];postUrl[t]=postUrl[e],postUrl[e]=s;var s=postSum[t];postSum[t]=postSum[e],postSum[e]=s;var s=postLabels[t];postLabels[t]=postLabels[e],postLabels[e]=s}for(var s=0;s<postTitle.length-1;s++)for(var o=s+1;o<postTitle.length;o++)"عنوان"==t&&postTitle[s]>postTitle[o]&&e(s,o),"عنوان"==t&&postTitle[s]<postTitle[o]&&e(s,o),"التاريخ الأقدم"==t&&postDate[s]>postDate[o]&&e(s,o),"التاريخ الأجدد"==t&&postDate[s]<postDate[o]&&e(s,o)}function displayToc(t){var e=0,s="",o="عناوين التدوينات",l="انقر للإختيار حسب العنوان",a="تاريخ التدوينة",r="انقر للإختيار حسب التاريخ",i="الأقسام",n="";"عنوان ثاني"==sortBy&&(l+=" (تصاعدي)",r+=" (الأحدث أول)"),"عنوان"==sortBy&&(l+=" (تصاعدي)",r+=" (الأحدث أولا)"),"التاريخ الأقدم"==sortBy&&(l+=" (تصاعدي)",r+=" (الأحدث أولا)"),"التاريخ الأجدد"==sortBy&&(l+=" (تصاعدي)",r+=" (الأقدم أولا)"),""!=postFilter&&(n="Click to show all posts"),s+="<table>",s+="<tr>",s+='<td class="toc-header-col1">',s+='<a href="javascript:toggleTitleSort();" title="'+l+'">'+o+"</a>",s+="</td>",s+='<td class="toc-header-col2">',s+='<a href="javascript:toggleDateSort();" title="'+r+'">'+a+"</a>",s+="</td>",s+='<td class="toc-header-col3">',s+='<a href="javascript:allPosts();" title="'+n+'">'+i+"</a>",s+="</td>",s+="</tr>";for(var c=0;c<postTitle.length;c++)""==t?(s+='<tr><td class="toc-entry-col1"><a href="'+postUrl[c]+'" title="'+postSum[c]+'">'+postTitle[c]+'</a></td><td class="toc-entry-col2">'+postDate[c]+'</td><td class="toc-entry-col3">'+postLabels[c]+"</td></tr>",e++):(z=postLabels[c].lastIndexOf(t),-1!=z&&(s+='<tr><td class="toc-entry-col1"><a href="'+postUrl[c]+'" title="'+postSum[c]+'">'+postTitle[c]+'</a></td><td class="toc-entry-col2">'+postDate[c]+'</td><td class="toc-entry-col3">'+postLabels[c]+"</td></tr>",e++));if(s+="</table>",e==postTitle.length)var p='<span class="toc-note">جميع التدوينات '+postTitle.length+" كاملة<br/></span>";else{var p='<span class="toc-note">Displaying '+e+" posts labeled '";p+=postFilter+"' من "+postTitle.length+" عدد التدوينات<br/></span>"}tocdiv.innerHTML=p+s}function toggleTitleSort(){sortBy="titleasc"==sortBy?"titledesc":"titleasc",sortPosts(sortBy),displayToc(postFilter)}function toggleDateSort(){sortBy="datenewest"==sortBy?"dateoldest":"datenewest",sortPosts(sortBy),displayToc(postFilter)}function showToc(){if(tocLoaded){displayToc(postFilter);document.getElementById("toclink")}else alert("إنتظر .. جاري التحميل")}function hideToc(){var t=document.getElementById("toc");t.innerHTML="";var e=document.getElementById("toclink");e.innerHTML='<a href="#" onclick="scroll(0,0); showToc(); Effect.toggle(\'toc-result\',\'blind\');">» Show Table of Contents</a> <img src="http://chenkaie.blog.googlepages.com/new_1.gif"/>'}var postTitle=new Array,postUrl=new Array,postDate=new Array,postSum=new Array,postLabels=new Array,sortBy="datenewest",tocLoaded=!1,numChars=250,postFilter="",tocdiv=document.getElementById("bp_toc"),totalEntires=0,totalPosts=0;
+// ---------------------------------------------------
+// BLOGTOC
+// ---------------------------------------------------
+// BlogToc creates a clickable Table Of Contents for
+// Blogger Blogs.
+// It uses the JSON post feed, and create a ToC of it.
+// The ToC can be sorted by title or by date, both
+// ascending and descending, and can be filtered by
+// label.
+// ---------------------------------------------------
+// Author: Beautiful Beta
+// Url: http://beautifulbeta.blogspot.com
+// Version: 2
+// Date: 2007-04-12
+// ---------------------------------------------------
+// Modified by Aneesh 
+// www.bloggerplugins.org
+// Date : 02-08-2011
+// global arrays
+
+   var postTitle = new Array();     // array of posttitles
+   var postUrl = new Array();       // array of posturls
+   var postDate = new Array();      // array of post publish dates
+   var postSum = new Array();       // array of post summaries
+   var postLabels = new Array();    // array of post labels
+
+// global variables
+   var sortBy = "datenewest";         // default value for sorting ToC
+   var tocLoaded = false;           // true if feed is read and ToC can be displayed
+   var numChars = 250;              // number of characters in post summary
+   var postFilter = '';             // default filter value
+   var tocdiv = document.getElementById("bp_toc"); //the toc container
+   var totalEntires =0; //Entries grabbed till now
+   var totalPosts =0; //Total number of posts in the blog.
+
+// main callback function
+
+function loadtoc(json) {
+
+   function getPostData() {
+   // this functions reads all postdata from the json-feed and stores it in arrays
+      if ("entry" in json.feed) {
+         var numEntries = json.feed.entry.length;
+         totalEntires = totalEntires + numEntries;
+         totalPosts=json.feed.openSearch$totalResults.$t
+         if(totalPosts>totalEntires)
+         {
+         var nextjsoncall = document.createElement('script');
+         nextjsoncall.type = 'text/javascript';
+         startindex=totalEntires+1;
+         nextjsoncall.setAttribute("src", "/feeds/posts/summary?start-index=" + startindex + "&max-results=500&alt=json-in-script&callback=loadtoc");
+         tocdiv.appendChild(nextjsoncall);
+         }
+      // main loop gets all the entries from the feed
+         for (var i = 0; i < numEntries; i++) {
+         // get the entry from the feed
+            var entry = json.feed.entry[i];
+
+         // get the posttitle from the entry
+            var posttitle = entry.title.$t;
+
+         // get the post date from the entry
+            var postdate = entry.published.$t.substring(0,10);
+
+         // get the post url from the entry
+            var posturl;
+            for (var k = 0; k < entry.link.length; k++) {
+               if (entry.link[k].rel == 'alternate') {
+               posturl = entry.link[k].href;
+               break;
+               }
+            }
+
+         // get the post contents from the entry
+         // strip all html-characters, and reduce it to a summary
+            if ("content" in entry) {
+               var postcontent = entry.content.$t;}
+            else
+               if ("summary" in entry) {
+                  var postcontent = entry.summary.$t;}
+               else var postcontent = "";
+         // strip off all html-tags
+            var re = /<\S[^>]*>/g; 
+            postcontent = postcontent.replace(re, "");
+         // reduce postcontent to numchar characters, and then cut it off at the last whole word
+            if (postcontent.length > numChars) {
+               postcontent = postcontent.substring(0,numChars);
+               var quoteEnd = postcontent.lastIndexOf(" ");
+               postcontent = postcontent.substring(0,quoteEnd) + '...';
+            }
+
+         // get the post labels from the entry
+            var pll = '';
+            if ("category" in entry) {
+               for (var k = 0; k < entry.category.length; k++) {
+                  pll += '<a href="javascript:filterPosts(\'' + entry.category[k].term + '\');" title="Click here to select all posts with label \'' + entry.category[k].term + '\'">' + entry.category[k].term + '</a>,  ';
+               }
+            var l = pll.lastIndexOf(',');
+            if (l != -1) { pll = pll.substring(0,l); }
+            }
+
+         // add the post data to the arrays
+            postTitle.push(posttitle);
+            postDate.push(postdate);
+            postUrl.push(posturl);
+            postSum.push(postcontent);
+            postLabels.push(pll);
+         }
+      }
+      if(totalEntires==totalPosts) {tocLoaded=true;showToc();}
+   } // end of getPostData
+
+// start of showtoc function body
+// get the number of entries that are in the feed
+//   numEntries = json.feed.entry.length;
+
+// get the postdata from the feed
+   getPostData();
+
+// sort the arrays
+   sortPosts(sortBy);
+   tocLoaded = true;
+}
+
+
+
+// filter and sort functions
+
+
+function filterPosts(filter) {
+// This function changes the filter
+// and displays the filtered list of posts
+  // document.getElementById("bp_toc").scrollTop = document.getElementById("bp_toc").offsetTop;;
+   postFilter = filter;
+   displayToc(postFilter);
+} // end filterPosts
+
+function allPosts() {
+// This function resets the filter
+// and displays all posts
+
+   postFilter = '';
+   displayToc(postFilter);
+} // end allPosts
+
+function sortPosts(sortBy) {
+// This function is a simple bubble-sort routine
+// that sorts the posts
+
+   function swapPosts(x,y) {
+   // Swaps 2 ToC-entries by swapping all array-elements
+      var temp = postTitle[x];
+      postTitle[x] = postTitle[y];
+      postTitle[y] = temp;
+      var temp = postDate[x];
+      postDate[x] = postDate[y];
+      postDate[y] = temp;
+      var temp = postUrl[x];
+      postUrl[x] = postUrl[y];
+      postUrl[y] = temp;
+      var temp = postSum[x];
+      postSum[x] = postSum[y];
+      postSum[y] = temp;
+      var temp = postLabels[x];
+      postLabels[x] = postLabels[y];
+      postLabels[y] = temp;
+   } // end swapPosts
+
+   for (var i=0; i < postTitle.length-1; i++) {
+      for (var j=i+1; j<postTitle.length; j++) {
+         if (sortBy == "عنوان") { if (postTitle[i] > postTitle[j]) { swapPosts(i,j); } }
+         if (sortBy == "عنوان") { if (postTitle[i] < postTitle[j]) { swapPosts(i,j); } }
+         if (sortBy == "التاريخ الأقدم") { if (postDate[i] > postDate[j]) { swapPosts(i,j); } }
+         if (sortBy == "التاريخ الأجدد") { if (postDate[i] < postDate[j]) { swapPosts(i,j); } }
+      }
+   }
+} // end sortPosts
+
+// displaying the toc
+
+function displayToc(filter) {
+// this function creates a three-column table and adds it to the screen
+   var numDisplayed = 0;
+   var tocTable = '';
+   var tocHead1 = 'عناوين التدوينات';
+   var tocTool1 = 'انقر للإختيار حسب العنوان';
+   var tocHead2 = 'تاريخ التدوينة';
+   var tocTool2 = 'انقر للإختيار حسب التاريخ';
+   var tocHead3 = 'الأقسام';
+   var tocTool3 = '';
+   if (sortBy == "عنوان ثاني") { 
+      tocTool1 += ' (تصاعدي)';
+      tocTool2 += ' (الأحدث أول)';
+   }
+   if (sortBy == "عنوان") { 
+      tocTool1 += ' (تصاعدي)';
+      tocTool2 += ' (الأحدث أولا)';
+   }
+   if (sortBy == "التاريخ الأقدم") { 
+      tocTool1 += ' (تصاعدي)';
+      tocTool2 += ' (الأحدث أولا)';
+   }
+   if (sortBy == "التاريخ الأجدد") { 
+      tocTool1 += ' (تصاعدي)';
+      tocTool2 += ' (الأقدم أولا)';
+   }
+   if (postFilter != '') {
+      tocTool3 = 'Click to show all posts';
+   }
+   tocTable += '<table>';
+   tocTable += '<tr>';
+   tocTable += '<td class="toc-header-col1">';
+   tocTable += '<a href="javascript:toggleTitleSort();" title="' + tocTool1 + '">' + tocHead1 + '</a>';
+   tocTable += '</td>';
+   tocTable += '<td class="toc-header-col2">';
+   tocTable += '<a href="javascript:toggleDateSort();" title="' + tocTool2 + '">' + tocHead2 + '</a>';
+   tocTable += '</td>';
+   tocTable += '<td class="toc-header-col3">';
+   tocTable += '<a href="javascript:allPosts();" title="' + tocTool3 + '">' + tocHead3 + '</a>';
+   tocTable += '</td>';
+   tocTable += '</tr>';
+   for (var i = 0; i < postTitle.length; i++) {
+      if (filter == '') {
+         tocTable += '<tr><td class="toc-entry-col1"><a href="' + postUrl[i] + '" title="' + postSum[i] + '">' + postTitle[i] + '</a></td><td class="toc-entry-col2">' + postDate[i] + '</td><td class="toc-entry-col3">' + postLabels[i] + '</td></tr>';
+         numDisplayed++;
+      } else {
+          z = postLabels[i].lastIndexOf(filter);
+          if ( z!= -1) {
+             tocTable += '<tr><td class="toc-entry-col1"><a href="' + postUrl[i] + '" title="' + postSum[i] + '">' + postTitle[i] + '</a></td><td class="toc-entry-col2">' + postDate[i] + '</td><td class="toc-entry-col3">' + postLabels[i] + '</td></tr>';
+             numDisplayed++;
+          }
+        }
+   }
+   tocTable += '</table>';
+   if (numDisplayed == postTitle.length) {
+      var tocNote = '<span class="toc-note">جميع التدوينات ' + postTitle.length + ' كاملة<br/></span>'; }
+   else {
+      var tocNote = '<span class="toc-note">Displaying ' + numDisplayed + ' posts labeled \'';
+      tocNote += postFilter + '\' من '+ postTitle.length + ' عدد التدوينات<br/></span>';
+   }
+   tocdiv.innerHTML = tocNote + tocTable;
+} // end of displayToc
+
+function toggleTitleSort() {
+   if (sortBy == "titleasc") { sortBy = "titledesc"; }
+   else { sortBy = "titleasc"; }
+   sortPosts(sortBy);
+   displayToc(postFilter);
+} // end toggleTitleSort
+
+function toggleDateSort() {
+   if (sortBy == "datenewest") { sortBy = "dateoldest"; }
+   else { sortBy = "datenewest"; }
+   sortPosts(sortBy);
+   displayToc(postFilter);
+} // end toggleTitleSort
+
+
+function showToc() {
+  if (tocLoaded) { 
+     displayToc(postFilter);
+     var toclink = document.getElementById("toclink");
+   
+  }
+  else { alert("إنتظر .. جاري التحميل"); }
+}
+
+function hideToc() {
+  var tocdiv = document.getElementById("toc");
+  tocdiv.innerHTML = '';
+  var toclink = document.getElementById("toclink");
+  toclink.innerHTML = '<a href="#" onclick="scroll(0,0); showToc(); Effect.toggle('+"'toc-result','blind');"+'">» Show Table of Contents</a> <img src="http://chenkaie.blog.googlepages.com/new_1.gif"/>';
+}
