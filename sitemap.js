@@ -168,10 +168,10 @@ function sortPosts(sortBy) {
 
    for (var i=0; i < postTitle.length-1; i++) {
       for (var j=i+1; j<postTitle.length; j++) {
-         if (sortBy == "Ø¹Ù†ÙˆØ§Ù†") { if (postTitle[i] > postTitle[j]) { swapPosts(i,j); } }
-         if (sortBy == "Ø¹Ù†ÙˆØ§Ù†") { if (postTitle[i] < postTitle[j]) { swapPosts(i,j); } }
-         if (sortBy == "Ø§Ù„ØªØ§Ø±ÙŠØ® Ø§Ù„Ø£Ù‚Ø¯Ù…") { if (postDate[i] > postDate[j]) { swapPosts(i,j); } }
-         if (sortBy == "Ø§Ù„ØªØ§Ø±ÙŠØ® Ø§Ù„Ø£Ø¬Ø¯Ø¯") { if (postDate[i] < postDate[j]) { swapPosts(i,j); } }
+         if (sortBy == "عنوان") { if (postTitle[i] > postTitle[j]) { swapPosts(i,j); } }
+         if (sortBy == "عنوان") { if (postTitle[i] < postTitle[j]) { swapPosts(i,j); } }
+         if (sortBy == "التاريخ الأقدم") { if (postDate[i] > postDate[j]) { swapPosts(i,j); } }
+         if (sortBy == "التاريخ الأجدد") { if (postDate[i] < postDate[j]) { swapPosts(i,j); } }
       }
    }
 } // end sortPosts
@@ -182,27 +182,27 @@ function displayToc(filter) {
 // this function creates a three-column table and adds it to the screen
    var numDisplayed = 0;
    var tocTable = '';
-   var tocHead1 = 'Ø¹Ù†Ø§ÙˆÙŠÙ† Ø§Ù„ØªØ¯ÙˆÙŠÙ†Ø§Øª';
-   var tocTool1 = 'Ø§Ù†Ù‚Ø± Ù„Ù„Ø¥Ø®ØªÙŠØ§Ø± Ø­Ø³Ø¨ Ø§Ù„Ø¹Ù†ÙˆØ§Ù†';
-   var tocHead2 = 'ØªØ§Ø±ÙŠØ® Ø§Ù„ØªØ¯ÙˆÙŠÙ†Ø©';
-   var tocTool2 = 'Ø§Ù†Ù‚Ø± Ù„Ù„Ø¥Ø®ØªÙŠØ§Ø± Ø­Ø³Ø¨ Ø§Ù„ØªØ§Ø±ÙŠØ®';
-   var tocHead3 = 'Ø§Ù„Ø£Ù‚Ø³Ø§Ù…';
+   var tocHead1 = 'عناوين التدوينات';
+   var tocTool1 = 'انقر للإختيار حسب العنوان';
+   var tocHead2 = 'تاريخ التدوينة';
+   var tocTool2 = 'انقر للإختيار حسب التاريخ';
+   var tocHead3 = 'الأقسام';
    var tocTool3 = '';
-   if (sortBy == "Ø¹Ù†ÙˆØ§Ù† Ø«Ø§Ù†ÙŠ") { 
-      tocTool1 += ' (ØªØµØ§Ø¹Ø¯ÙŠ)';
-      tocTool2 += ' (Ø§Ù„Ø£Ø­Ø¯Ø« Ø£ÙˆÙ„)';
+   if (sortBy == "عنوان ثاني") { 
+      tocTool1 += ' (تصاعدي)';
+      tocTool2 += ' (الأحدث أول)';
    }
-   if (sortBy == "Ø¹Ù†ÙˆØ§Ù†") { 
-      tocTool1 += ' (ØªØµØ§Ø¹Ø¯ÙŠ)';
-      tocTool2 += ' (Ø§Ù„Ø£Ø­Ø¯Ø« Ø£ÙˆÙ„Ø§)';
+   if (sortBy == "عنوان") { 
+      tocTool1 += ' (تصاعدي)';
+      tocTool2 += ' (الأحدث أولا)';
    }
-   if (sortBy == "Ø§Ù„ØªØ§Ø±ÙŠØ® Ø§Ù„Ø£Ù‚Ø¯Ù…") { 
-      tocTool1 += ' (ØªØµØ§Ø¹Ø¯ÙŠ)';
-      tocTool2 += ' (Ø§Ù„Ø£Ø­Ø¯Ø« Ø£ÙˆÙ„Ø§)';
+   if (sortBy == "التاريخ الأقدم") { 
+      tocTool1 += ' (تصاعدي)';
+      tocTool2 += ' (الأحدث أولا)';
    }
-   if (sortBy == "Ø§Ù„ØªØ§Ø±ÙŠØ® Ø§Ù„Ø£Ø¬Ø¯Ø¯") { 
-      tocTool1 += ' (ØªØµØ§Ø¹Ø¯ÙŠ)';
-      tocTool2 += ' (Ø§Ù„Ø£Ù‚Ø¯Ù… Ø£ÙˆÙ„Ø§)';
+   if (sortBy == "التاريخ الأجدد") { 
+      tocTool1 += ' (تصاعدي)';
+      tocTool2 += ' (الأقدم أولا)';
    }
    if (postFilter != '') {
       tocTool3 = 'Click to show all posts';
@@ -233,10 +233,10 @@ function displayToc(filter) {
    }
    tocTable += '</table>';
    if (numDisplayed == postTitle.length) {
-      var tocNote = '<span class="toc-note">Ø¬Ù…ÙŠØ¹ Ø§Ù„ØªØ¯ÙˆÙŠÙ†Ø§Øª ' + postTitle.length + ' ÙƒØ§Ù…Ù„Ø©<br/></span>'; }
+      var tocNote = '<span class="toc-note">جميع التدوينات ' + postTitle.length + ' كاملة<br/></span>'; }
    else {
       var tocNote = '<span class="toc-note">Displaying ' + numDisplayed + ' posts labeled \'';
-      tocNote += postFilter + '\' Ù…Ù† '+ postTitle.length + ' Ø¹Ø¯Ø¯ Ø§Ù„ØªØ¯ÙˆÙŠÙ†Ø§Øª<br/></span>';
+      tocNote += postFilter + '\' من '+ postTitle.length + ' عدد التدوينات<br/></span>';
    }
    tocdiv.innerHTML = tocNote + tocTable;
 } // end of displayToc
@@ -262,12 +262,12 @@ function showToc() {
      var toclink = document.getElementById("toclink");
    
   }
-  else { alert("Ø¥Ù†ØªØ¸Ø± .. Ø¬Ø§Ø±ÙŠ Ø§Ù„ØªØ­Ù…ÙŠÙ„"); }
+  else { alert("إنتظر .. جاري التحميل"); }
 }
 
 function hideToc() {
   var tocdiv = document.getElementById("toc");
   tocdiv.innerHTML = '';
   var toclink = document.getElementById("toclink");
-  toclink.innerHTML = '<a href="#" onclick="scroll(0,0); showToc(); Effect.toggle('+"'toc-result','blind');"+'">Â» Show Table of Contents</a> <img src="http://chenkaie.blog.googlepages.com/new_1.gif"/>';
+  toclink.innerHTML = '<a href="#" onclick="scroll(0,0); showToc(); Effect.toggle('+"'toc-result','blind');"+'">» Show Table of Contents</a> <img src="http://chenkaie.blog.googlepages.com/new_1.gif"/>';
 }
